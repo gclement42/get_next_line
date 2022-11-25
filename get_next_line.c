@@ -6,32 +6,13 @@
 /*   By: gclement <gclement@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/22 15:28:29 by gclement          #+#    #+#             */
-/*   Updated: 2022/11/24 10:26:20 by gclement         ###   ########.fr       */
+/*   Updated: 2022/11/25 17:51:13 by gclement         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 #include <fcntl.h>
 #include <stdio.h>
-
-// void	memorize_line(int *i, int *tmp, char *all_file)
-// {
-// 	if (*tmp <= 0)
-// 	{
-// 		*i = 0;
-// 		while (all_file[*i] != '\n')
-// 			*i += 1;
-// 	}
-// 	else
-// 	{
-// 		printf(" else tmp = %d", *tmp);
-// 		while (all_file[*i] != '\n')
-// 			*i += 1;
-// 	}
-// 	*i += 1;
-// 	*tmp = *i;
-// 	printf("i = %d, tmp = %d\n", *i, *tmp);
-// }
 
 void	*ft_calloc( size_t count, size_t size)
 {
@@ -66,45 +47,83 @@ char	*ft_strjoin(char const *s1, char const *s2)
 char	*allocate_and_read(char *dest, int fd, int size)
 {
 	char	*str;
+	char	*tmp;
 
 	str = malloc((size + 1) * sizeof(char));
 	if (!str)
 		return (NULL);
 	read(fd, str, size);
-	if (ft_memchr(str, '\0', size) != 0)
-	{
-		ft_bzero(ft_memchr(str, '\n', size), 2);
-		return (ft_strjoin(dest, str));
-	}
 	str[size] = '\0';
-	return (ft_strjoin(dest, str));
+	tmp = ft_strjoin(dest, str);
+	return (tmp);
+}
+
+char	*search_line(char *str, int fd, int *size)
+{
+	while (ft_memchr(str, '\n', *size) == 0 && ft_memchr(str, '\0', *size) != 0)
+	{
+		*size += BUFFER_SIZE;
+		str = allocate_and_read(str, fd, *size);
+	}
+	return (str);
 }
 
 char	*get_next_line(int fd)
 {
-	char	*str;
-	int		size;
+	char		*str;
+	char		*tmp;
+	int			size;
+	static char	*overflow;
 
 	size = BUFFER_SIZE;
-	str = malloc((size + 1) * sizeof(char));
-	if (!str)
-		return (NULL);
-	read(fd, str, size);
-	str[size] = '\0';
-	if (!str)
-		return (NULL);
-	while (ft_memchr(str, '\n', size) == 0)
-	{
-		size += BUFFER_SIZE;
-		str = allocate_and_read(str, fd, size);
+	str = NULL;
+	if (overflow != NULL)
+		str = search_line(overflow, fd, &size);
+	else
+	{	
+		str = malloc((size + 1) * sizeof(char));
+		if (!str)
+			return (NULL);
+		read(fd, str, size);
+		str[size] = '\0';
+		if (!str)
+			return (NULL);
+	tmp = search_line(str, fd, &size);
 	}
-	ft_bzero(ft_memchr(str, '\n', size), 2);
+	overflow = ft_memchr(tmp, '\n', size);
+	overflow = overflow + 1;
+	// printf("\nsize = %d\n", size);
+	// printf("overflow = %s\n", overflow);
 	return (str);
 }
-
 int	main(void)
 {
-	int f = open ("7empty.txt", O_RDONLY);
-	printf("%s" ,get_next_line(f));	
+	int f = open ("errr.txt", O_RDONLY);
+	//get_next_line(f);
+	printf("getnextline = %s", get_next_line(f));
+	// printf("getnextline = %s", get_next_line(f));
+	// printf("getnextline = %s", get_next_line(f));
+	// printf("getnextline = %s", get_next_line(f));
+	// printf("getnextline = %s", get_next_line(f));
+	// printf("getnextline = %s", get_next_line(f));
+	// printf("getnextline = %s", get_next_line(f));
+	// printf("getnextline = %s", get_next_line(f));
+	// printf("getnextline = %s", get_next_line(f));
+	// printf("getnextline = %s", get_next_line(f));
+	// printf("getnextline = %s", get_next_line(f));
+	// printf("getnextline = %s", get_next_line(f));
+	// printf("getnextline = %s", get_next_line(f));
+	// printf("getnextline = %s", get_next_line(f));
+	// printf("getnextline = %s", get_next_line(f));
+	// printf("getnextline = %s", get_next_line(f));
+	// printf("getnextline = %s", get_next_line(f));
+	// printf("getnextline = %s", get_next_line(f));
+	// printf("getnextline = %s", get_next_line(f));
+	// printf("getnextline = %s", get_next_line(f));
+	// printf("getnextline = %s", get_next_line(f));
+	// printf("getnextline = %s", get_next_line(f));
+	
+	//printf("%s\n" , get_next_line(f));
+	//// printf("%s\n" , get_next_line(f));
 	close(f);
 }
