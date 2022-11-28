@@ -6,7 +6,7 @@
 /*   By: gclement <gclement@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/22 15:28:52 by gclement          #+#    #+#             */
-/*   Updated: 2022/11/25 11:22:37 by gclement         ###   ########.fr       */
+/*   Updated: 2022/11/28 11:17:44 by gclement         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 size_t	ft_strlen(const char *str)
 {
-	int	i;
+	size_t	i;
 
 	i = 0;
 	while (str[i] != '\0')
@@ -31,25 +31,13 @@ void	*ft_memchr(const void *memBlock, int srchChar, size_t size)
 	i = 0;
 	if (size <= 0)
 		return (NULL);
-	while (i < size)
+	while (str[i] && i < size)
 	{
 		if (((char)srchChar) == str[i])
-			return (&str[i]);
+			return (&str[i + 1]);
 		i++;
 	}
 	return (0);
-}
-
-void	ft_bzero(void *pointer, size_t n)
-{
-	size_t	i;
-
-	i = 0;
-	while (i < n)
-	{
-		((char *)pointer)[i] = '\0';
-		i++;
-	}
 }
 
 size_t	ft_strlcat(char *dest, const char *src, size_t size)
@@ -98,4 +86,25 @@ size_t	ft_strlcpy(char *dest, const char *src, size_t size)
 	}
 	else
 		return (ft_strlen(src));
+}
+
+char	*ft_strdup( const char *source )
+{
+	char	*ptr;
+	int		i;
+	size_t	len;
+
+	i = 0;
+	len = (size_t)ft_strlen(source);
+	ptr = malloc((len + 1) * sizeof(char));
+	if (!ptr)
+		return (NULL);
+	while (0 < len)
+	{
+		ptr[i] = source[i];
+		len--;
+		i++;
+	}
+	ptr[i] = '\0';
+	return (ptr);
 }
