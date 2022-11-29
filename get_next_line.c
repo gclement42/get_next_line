@@ -6,7 +6,7 @@
 /*   By: gclement <gclement@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/22 15:28:29 by gclement          #+#    #+#             */
-/*   Updated: 2022/11/29 09:51:28 by gclement         ###   ########.fr       */
+/*   Updated: 2022/11/29 15:45:43 by gclement         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,23 +34,22 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	return (NULL);
 }
 
-char	*copy_line(char *str, int size, int *bytes)
+char	*copy_line(char *str, int *bytes)
 {
 	char	*dest;
 	int		i;
 
 	i = 0;
 	dest = NULL;
-	// if (str[0] == '\n')
-	// 	return (dest);
-	if (ft_memchr(str, '\n', size) != 0 || *bytes != BUFFER_SIZE)
+	if (ft_strchr(str, '\n') != 0 || *bytes != BUFFER_SIZE)
 	{
 		while (str[i] && str[i] != '\n')
 			i++;
-		dest = malloc((i + 2) * sizeof(char));
+		i++;
+		dest = malloc((i + 1) * sizeof(char));
 		if (!dest)
 			return (NULL);
-		ft_strlcpy(dest, str, (i + 2));
+		ft_strlcpy(dest, str, (i + 1));
 	}
 	return (dest);
 }
@@ -83,18 +82,16 @@ char	*read_and_join(char *dest, int fd, int *bytes)
 	return (str);
 }
 
-char	*search_line(char *str, int fd, int *size, int *bytes)
+char	*search_line(char *str, int fd, int *bytes)
 {
+	if (str == NULL)
+		return (NULL);
 	while ((*bytes == BUFFER_SIZE || *bytes == -1)
-		&& ft_memchr(str, '\n', *size) == 0)
+		&& ft_strchr(str, '\n') == 0)
 	{
 		str = read_and_join(str, fd, bytes);
 		if (str == NULL)
-			return (free(str), NULL);
-		if (*bytes == BUFFER_SIZE)
-			*size += BUFFER_SIZE;
-		else
-			*size += *bytes;
+			return (NULL);
 	}
 	return (str);
 }
@@ -104,27 +101,26 @@ char	*get_next_line(int fd)
 	static char	*overflow;
 	char		*str;
 	char		*tmp;
-	int			size;
 	int			bytes;
 
-	size = BUFFER_SIZE;
 	bytes = -1;
 	if (read(fd, NULL, 0) == -1)
-		return (free(overflow), NULL);
+		return (free(overflow), overflow = NULL, NULL);
 	if (overflow != NULL)
-		str = search_line(overflow, fd, &size, &bytes);
+		str = search_line(overflow, fd, &bytes);
 	else
 		str = read_and_join(NULL, fd, &bytes);
 	if (str == NULL)
 		return (NULL);
-	str = search_line(str, fd, &size, &bytes);
-	tmp = copy_line(str, size, &bytes);
-	if (ft_memchr(str, '\n', size) != 0 && str != NULL)
-		overflow = ft_strdup(ft_memchr(str, '\n', size));
+	str = search_line(str, fd, &bytes);
+	tmp = copy_line(str, &bytes);
+	if (ft_strchr(str, '\n') != 0 && str != NULL)
+		overflow = ft_strdup(ft_strchr(str, '\n'));
 	else
 		overflow = NULL;
 	if (tmp[0] == '\0' || tmp == NULL)
 		return (free(str), free(tmp), NULL);
+	//printf("tmp = %s\noverflow = %s\n", tmp, overflow);
 	return (free(str), tmp);
 }
 
@@ -132,10 +128,10 @@ char	*get_next_line(int fd)
 // {
 // 	int f = open ("7empty.txt", O_RDONLY);
 // 	int count = 0;
-// 	while (count < 1)
+// 	while (count < 6)
 // 	{
 // 		//get_next_line(f);
-// 		printf("getnext = %s \n", get_next_line(f));
+// 		printf("%s\n", get_next_line(f));
 // 		//printf("\n-----------------------------------------------------------------\n");
 // 		count++;
 // 	}

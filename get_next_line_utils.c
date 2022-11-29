@@ -6,12 +6,11 @@
 /*   By: gclement <gclement@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/22 15:28:52 by gclement          #+#    #+#             */
-/*   Updated: 2022/11/29 10:02:28 by gclement         ###   ########.fr       */
+/*   Updated: 2022/11/29 14:30:41 by gclement         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-#include <stdio.h>
 
 size_t	ft_strlen(const char *str)
 {
@@ -23,22 +22,21 @@ size_t	ft_strlen(const char *str)
 	return (i);
 }
 
-void	*ft_memchr(const void *memBlock, int srchChar, size_t size)
+char	*ft_strchr(const char	*string, int searchCh)
 {
-	char	*str;
-	size_t	i;
+	int	i;
 
-	str = ((char *)memBlock);
 	i = 0;
-	if (size <= 0)
+	if (string == NULL || string[i] == '\0')
 		return (NULL);
-	printf("size = %zu", size);
-	while (str[i] && i < size)
+	while (string[i])
 	{
-		if (((char)srchChar) == str[i])
-			return (&str[i + 1]);
+		if (string[i] == (char)searchCh)
+			return (&((char *)string)[i + 1]);
 		i++;
 	}
+	if (string[i] == (char)searchCh)
+		return (&((char *)string)[i]);
 	return (0);
 }
 
@@ -90,7 +88,7 @@ size_t	ft_strlcpy(char *dest, const char *src, size_t size)
 		return (ft_strlen(src));
 }
 
-char	*ft_strdup( const char *source )
+char	*ft_strdup(const char *source)
 {
 	char	*ptr;
 	int		i;
