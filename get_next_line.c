@@ -6,7 +6,7 @@
 /*   By: gclement <gclement@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/22 15:28:29 by gclement          #+#    #+#             */
-/*   Updated: 2022/11/28 16:11:24 by gclement         ###   ########.fr       */
+/*   Updated: 2022/11/29 09:51:28 by gclement         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,22 +119,20 @@ char	*get_next_line(int fd)
 		return (NULL);
 	str = search_line(str, fd, &size, &bytes);
 	tmp = copy_line(str, size, &bytes);
-	if (!tmp)
-		return (NULL);
 	if (ft_memchr(str, '\n', size) != 0 && str != NULL)
 		overflow = ft_strdup(ft_memchr(str, '\n', size));
 	else
 		overflow = NULL;
-	free(str);
-	if (tmp[0] == '\0')
-		return (free(tmp), NULL);
-	return (tmp);
+	if (tmp[0] == '\0' || tmp == NULL)
+		return (free(str), free(tmp), NULL);
+	return (free(str), tmp);
 }
+
 // int	main(void)
 // {
 // 	int f = open ("7empty.txt", O_RDONLY);
 // 	int count = 0;
-// 	while (count < 5)
+// 	while (count < 1)
 // 	{
 // 		//get_next_line(f);
 // 		printf("getnext = %s \n", get_next_line(f));

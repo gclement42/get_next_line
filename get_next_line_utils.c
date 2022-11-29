@@ -6,11 +6,12 @@
 /*   By: gclement <gclement@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/22 15:28:52 by gclement          #+#    #+#             */
-/*   Updated: 2022/11/28 11:17:44 by gclement         ###   ########.fr       */
+/*   Updated: 2022/11/29 10:02:28 by gclement         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+#include <stdio.h>
 
 size_t	ft_strlen(const char *str)
 {
@@ -31,6 +32,7 @@ void	*ft_memchr(const void *memBlock, int srchChar, size_t size)
 	i = 0;
 	if (size <= 0)
 		return (NULL);
+	printf("size = %zu", size);
 	while (str[i] && i < size)
 	{
 		if (((char)srchChar) == str[i])
